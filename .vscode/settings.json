@@ -18,5 +18,5 @@
     // SPDX-License-Identifier: Apache-2.0
     //################################################################################
 
-    "pylint.extraPaths": [ "../server" ]
+    "pylint.path": [ "../server" ]
 }

@@ -116,11 +116,11 @@ def convert_record( input_record: dict[str,Any], external_id: str, column_name_t
                 convert_identifier( identifier, additional_lines, external_id )
             continue
 
-        if full_key == "states":
+        if full_key == "states" or full_key.endswith( ".states" ):
             if len( value ) > 0:
-                convert_states( value[0], dest, external_id )
+                convert_states( value[0], dest, external_id, full_key )
             for state in value[1:]:
-                convert_states( state, additional_lines, external_id )
+                convert_states( state, additional_lines, external_id, full_key )
             continue
 
         if full_key == "roles":
@@ -128,13 +128,6 @@ def convert_record( input_record: dict[str,Any], external_id: str, column_name_t
                 convert_roles( value[0], dest, external_id )
             for role in value[1:]:
                 convert_roles( role, additional_lines, external_id )
-            continue
-
-        if full_key == "legalEntity.classifications":
-            if len( value ) > 0:
-                convert_legalentity_classifications( value[0], dest, external_id )
-            for classification in value[1:]:
-                convert_legalentity_classifications( classification, additional_lines, external_id )
             continue
 
         if isinstance( value, dict ):
@@ -169,7 +162,7 @@ def convert_identifier( identifier: dict[str,Any], dest: dict[str,str]|list, ext
     d["externalId"] = external_id
 
 
-def convert_states( state: dict[str,Any], dest: dict[str,str]|list, external_id: str ):
+def convert_states( state: dict[str,Any], dest: dict[str,str]|list, external_id: str, full_key: str ):
     """Convert a state to a dictionary suitable for csv writing
 
     dest can be a dictionary. In that case, the data is added to that dictionary.
@@ -182,9 +175,9 @@ def convert_states( state: dict[str,Any], dest: dict[str,str]|list, external_id:
         d = {}
         dest.append( d )
 
-    d["states.validFrom"] = convert_value( state["validFrom"] )
-    d["states.validTo"] = convert_value( state["validTo"] )
-    d["states.type"] = convert_value( state["type"] )
+    d[full_key + ".validFrom"] = convert_value( state["validFrom"] )
+    d[full_key + ".validTo"] = convert_value( state["validTo"] )
+    d[full_key + ".type"] = convert_value( state["type"] )
     d["externalId"] = external_id
 
 
@@ -202,25 +195,6 @@ def convert_roles( role: dict[str,Any], dest: dict[str,str]|list, external_id: s
         dest.append( d )
 
     d["roles"] = convert_value( role )
-    d["externalId"] = external_id
-
-
-def convert_legalentity_classifications( classification: dict[str,Any], dest: dict[str,str]|list, external_id: str ):
-    """Convert a classification to a dictionary suitable for csv writing
-
-    dest can be a dictionary. In that case, the data is added to that dictionary.
-    Or it can be a list. In that case, the data is added to the list as a dictionary.
-    """
-
-    if isinstance( dest, dict ):
-        d = dest
-    else:
-        d = {}
-        dest.append( d )
-
-    d["legalEntity.classifications.type"] = convert_value( classification["type"] )
-    d["legalEntity.classifications.code"] = convert_value( classification["code"] )
-    d["legalEntity.classifications.value"] = convert_value( classification["value"] )
     d["externalId"] = external_id
 
 

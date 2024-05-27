@@ -40,8 +40,8 @@ logger = logging.getLogger(__name__)       # pylint: disable=invalid-name
 CHUNK_SIZE = 100
 
 # Swagger: https://business-partners.int.demo.catena-x.net/companies/test-company/ui/swagger-ui/index.html#/business-partner-controller/upsertBusinessPartnersInput
-AUTH_URL = "https://centralidp.int.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token"
-BASE_URL = "https://business-partners.int.demo.catena-x.net/companies/test-company/api/catena/"
+AUTH_URL = "https://centralidp.dev.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token"
+BASE_URL = "https://business-partners.dev.demo.catena-x.net/companies/test-company/v6/"
 
 CREDENTIALS = None      # will be set in init()
 

@@ -54,13 +54,6 @@ class CSVStates:
         self.validTo: datetime.datetime = None
         self.type: StatesType = None
 
-class CSVClassifications:
-    """Classifications of a CSV-Record"""
-    def __init__(self):
-        self.type: ClassificationsType = None
-        self.code: str|None = None
-        self.value: str|None = None
-
 class CSVRecord:
     """A CSV-Record"""
     def __init__(self):
@@ -77,13 +70,15 @@ class CSVRecord:
         self.identifiers: list[CSVIdentifiers] = []
         self.states: list[CSVStates] = []
         self.roles: list[Roles] = []
+        self.isOwnCompanyData: bool = False
         self.legalEntity_legalEntityBpn: str|None = None
         self.legalEntity_legalName: str|None = None
         self.legalEntity_shortName: str|None = None
         self.legalEntity_legalForm: str|None = None
-        self.legalEntity_classifications: list[CSVClassifications] = []
+        self.legalEntity_states: list[CSVStates] = []
         self.site_siteBpn: str|None = None
         self.site_name: str|None = None
+        self.site_states: list[CSVStates] = []
         self.address_addressBpn: str|None = None
         self.address_name: str|None = None
         self.address_addressType: AddressType|None = None
@@ -121,9 +116,7 @@ class CSVRecord:
         self.address_alternative_deliveryServiceType: DeliveryServiceType = None
         self.address_alternative_deliveryServiceQualifier: str|None = None
         self.address_alternative_deliveryServiceNumber: str|None = None
-        self.createdAt: datetime.datetime|None = None
-        self.updatedAt: datetime.datetime|None = None
-        self.isOwnCompanyData: bool = False
+        self.address_states: list[CSVStates] = []
 
     def to_dict(self) -> dict[str, Any]:
         """Converts the object to a dictionary suitable for submitting to the API"""
@@ -141,12 +134,15 @@ class CSVRecord:
             "states": [ { "validFrom": s.validFrom.isoformat(), "validTo": s.validTo.isoformat(), "type": s.type.name } for s in self.states ],
             "roles": [ r.name for r in self.roles ],
             "legalEntity": {
-                "classifications": [ { "type": c.type.name, "code": c.code, "value": c.value } for c in self.legalEntity_classifications ]
+                "states": [ { "validFrom": s.validFrom.isoformat(), "validTo": s.validTo.isoformat(), "type": s.type.name } for s in self.legalEntity_states ]
             },
-            "site": {},
+            "site": {
+                "states": [ { "validFrom": s.validFrom.isoformat(), "validTo": s.validTo.isoformat(), "type": s.type.name } for s in self.site_states ]
+            },
             "address": {
                 "physicalPostalAddress": {},
-                "alternativePostalAddress": {}
+                "alternativePostalAddress": {},
+                "states": [ { "validFrom": s.validFrom.isoformat(), "validTo": s.validTo.isoformat(), "type": s.type.name } for s in self.address_states ]
             },
             "isOwnCompanyData": self.isOwnCompanyData
         }
@@ -241,25 +237,23 @@ def convert( reader: csv.reader ) -> list[CSVRecord]:
 
     # If one of the columns exists, all columns have to exist in the input file
     related_columns = [
-        _get_all_columns( header, re.compile( r"^identifiers." )),
-        _get_all_columns( header, re.compile( r"^states." )),
-        _get_all_columns( header, re.compile( r"^legalEntity.classifications." )),
         _get_all_columns( header, re.compile( r"^address.physical.geographicCoordinates.l" )),          # only longitude/latitude, not altitude
         _get_all_columns( header, re.compile( r"^address.alternative.geographicCoordinates.l" )),       # only longitude/latitude, not altitude
     ]
 
     # These columns can be repeated again on new lines for adding additional elements to the array
     array_groups = [
-        ArrayGroup( "identifiers",      "identifiers.", CSVIdentifiers ),
-        ArrayGroup( "states",           "states.",      CSVStates ),
-        ArrayGroup( "legalEntity_classifications",  "legalEntity.classifications.", CSVClassifications ),
+        ArrayGroup( "identifiers",          "identifiers.",         CSVIdentifiers ),
         ArrayGroup( "roles" ),
+        ArrayGroup( "states",               "states.",              CSVStates ),
+        ArrayGroup( "legalEntity_states",   "legalEntity.states.",  CSVStates ),
+        ArrayGroup( "site_states",          "site.states.",         CSVStates ),
+        ArrayGroup( "address_states",       "address.states.",      CSVStates ),
     ]
 
     data, _ = csv_tools.read_header_csv_with_reader( reader,
                                          header=header,
                                          make_objects=CSVRecord,
-                                         ignore_unknown_columns=True,
                                          related_columns=related_columns,
                                          identifier_column="externalId",
                                          array_groups=array_groups )

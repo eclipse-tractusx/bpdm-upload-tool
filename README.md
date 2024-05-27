@@ -6,18 +6,25 @@ See [CSV File Format](documentation/CSV%20File%20Format.md)
 
 ## Installation
 ```bash
-# Install pipenv, if not already present in local Python setup
+# Install pipenv, if it is not already present in your local Python setup.
+# Use one of the commands below, suitable for your OS.
 pip install pipenv
+pip3 install pipenv
+brew install pipenv
+apt install pipenv
 
-# change into main directory
+# Change into the main directory
 cd bpdm-upload-tool
 
-# optionally: create local .venv directory if you want the environment
+# Optionally: create a local .venv directory if you want the environment
 # to be stored below the source tree and not in your home directory.
 mkdir .venv
 
-# install dependencies (will automatically detect the .venv directory)
+# Install dependencies (will automatically detect the .venv directory)
 pipenv install
+
+# create uploads folder
+mkdir uploads
 ```
 
 ## Credentials
