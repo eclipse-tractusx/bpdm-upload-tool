@@ -57,6 +57,14 @@ Package info: https://pypi.org/project/Flask/3.0.1
 
 License: [BSD 3-Clause](https://github.com/pallets/flask/blob/main/LICENSE.txt)
 
+### Dash tool
+
+You can check the dependencies using the [dash](https://github.com/eclipse/dash-licenses) tool:
+
+```bash
+java -jar org.eclipse.dash.licenses-<version>.jar DEPENDENCIES.dash
+```
+
 ## Cryptography
 
 Content may contain encryption software. The country in which you are currently
@@ -65,3 +73,12 @@ another country, of encryption software. BEFORE using any encryption software,
 please check the country's laws, regulations and policies concerning the import,
 possession, or use, and re-export of encryption software, to see if this is
 permitted.
+
+## NOTICE
+
+This work is licensed under the [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0).
+
+- SPDX-License-Identifier: Apache-2.0
+- SPDX-FileCopyrightText: 2024 ZF Friedrichshafen AG
+- SPDX-FileCopyrightText: 2024 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
+- Source URL: https://github.com/eclipse-tractusx/bpdm-upload-tool
