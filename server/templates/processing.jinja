@@ -1,0 +1,52 @@
+{################################################################################
+# Copyright (c) 2024 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License, Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0.
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+################################################################################}
+{% extends "base.jinja" %}
+{% block head %}
+    <title>CSV Upload Results</title>
+{% endblock %}
+
+{% block content %}
+    <h1>CSV processing in progress</h1>
+    <div id="communication_error" class="communication_error"></div>
+    <div><ul class="progress" id="progress"></ul></div>
+
+    <script lang="javascript">
+        function polling_loop() {
+            var progress_div = document.getElementById("progress");
+            var interval_id = setInterval(() => {
+                fetch('/progress/{{ job_uuid }}')
+                    .then(response => response.json())
+                    .then(data => {
+                        progress_div.innerHTML = data.progress;
+                        if (data.done) {
+                            clearInterval(interval_id);     // stop polling
+                        }
+                    })
+                    .catch(error => {
+                        var progress_error_div = document.getElementById("communication_error");
+                        progress_error_div.innerHTML = "Communication error: " + error;
+                        clearInterval(interval_id);     // stop polling
+                    });
+            }, 1000); // every second
+        }
+
+        // Start the short polling process
+        polling_loop();
+    </script>
+{% endblock %}
