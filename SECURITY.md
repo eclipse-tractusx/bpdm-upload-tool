@@ -2,14 +2,18 @@
 
 ## Reporting a Vulnerability
 
-Please report a found vulnerability here:
-[https://www.eclipse.org/security/](https://www.eclipse.org/security/)
+Please do **not** report security vulnerabilities through public GitHub issues.
 
-## NOTICE
+Please report vulnerabilities to this repository via **GitHub security advisories** instead.
 
-This work is licensed under the [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0).
+How? Inside affected repository --> security tab
 
-- SPDX-License-Identifier: Apache-2.0
-- SPDX-FileCopyrightText: 2024 ZF Friedrichshafen AG
-- SPDX-FileCopyrightText: 2024 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
-- Source URL: https://github.com/eclipse-tractusx/bpdm-upload-tool
+for contributor:
+--> Report a vulnerability
+
+for committer:
+--> advisories --> New draft security advisory
+
+In severe cases, you can also report a found vulnerability via mail or eclipse issue here: https://www.eclipse.org/security/
+
+See [Eclipse Foundation Vulnerability Reporting Policy](https://www.eclipse.org/projects/handbook/#vulnerability)
