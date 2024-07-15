@@ -1,0 +1,6 @@
+/.venv
+/tmp
+/uploads
+/development
+credentials*
+__pycache__
